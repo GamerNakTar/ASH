@@ -22,47 +22,89 @@
 </head>
 <body>
     <h1>미적분</h1>
-    <p id="q1"></p>
+    <p id="equation">Click the button to generate a polynomial equation with x.</p>
+    <p id="derivative"></p>
     <button onclick="generatePolynomialEquation()">Generate Equation</button>
+    <button onclick="showDerivative()">Show Answer</button>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/contrib/auto-render.min.js"></script>
     <script>
+        let derivative = '';
+
         // Function to generate and render a polynomial equation using KaTeX
         function generatePolynomialEquation() {
             // Define the possible degrees and coefficients
-            const degrees = [1, 2, 3, 4]; // Degrees of the polynomial
-            const maxCoefficient = 8; // Maximum absolute value for coefficients
+            const degrees = [4, 3, 2, 1]; // Degrees of the polynomial
+            const maxCoefficient = 15; // Maximum absolute value for coefficients
 
             // Generate random coefficients for each degree
-            const coefficients = degrees.map(degree => Math.floor(Math.random() * maxCoefficient));
-            const constant = Math.floor(Math.random() * maxCoefficient);
+            const coefficients = degrees.map(degree => Math.floor(Math.random() * maxCoefficient) - 6);
+            const constant = Math.floor(Math.random() * maxCoefficient) - 6;
 
             // Construct the polynomial equation
             let polynomial = '';
             degrees.forEach((degree, index) => {
                 if (coefficients[index] !== 0) {
                     let term = '';
-                    if (degree > 1) {
-                        term += coefficients[index] + 'x^' + degree;
+                    const coef = coefficients[index];
+                    if (coef === 1) {
+                        term += (degree > 1) ? 'x^' + degree : 'x';
+                    } else if (coef === -1) {
+                        term += (degree > 1) ? '-x^' + degree : '-x';
                     } else {
-                        term += coefficients[index] + 'x';
+                        term += (degree > 1) ? coef + 'x^' + degree : coef + 'x';
                     }
                     if (index > 0) {
-                        polynomial += ' + ' + term;
+                        polynomial += (coef > 0 ? ' + ' : ' ') + term;
                     } else {
                         polynomial += term;
                     }
                 }
             });
             if (constant !== 0) {
-                polynomial += ' + ' + constant;
+                polynomial += (constant > 0 ? ' + ' : ' ') + constant;
             }
 
             // Render the polynomial equation with KaTeX
             const equationElement = document.getElementById("equation");
             equationElement.innerHTML = ''; // Clear previous content
             katex.render('f(x) = ' + polynomial, equationElement, {
+                throwOnError: false
+            });
+
+            // Compute the derivative
+            derivative = '';
+            degrees.forEach((degree, index) => {
+                if (coefficients[index] !== 0) {
+                    let term = '';
+                    const coef = coefficients[index] * degree;
+                    const newDegree = degree - 1;
+                    if (newDegree > 0) {
+                        if (coef === 1) {
+                            term += (newDegree > 1) ? 'x^' + newDegree : 'x';
+                        } else if (coef === -1) {
+                            term += (newDegree > 1) ? '-x^' + newDegree : '-x';
+                        } else {
+                            term += (newDegree > 1) ? coef + 'x^' + newDegree : coef + 'x';
+                        }
+                    } else {
+                        term += coef;
+                    }
+                    if (index > 0) {
+                        derivative += (coef > 0 ? ' + ' : ' ') + term;
+                    } else {
+                        derivative += term;
+                    }
+                }
+            });
+        }
+
+        // Function to display the derivative
+        function showDerivative() {
+            const derivativeElement = document.getElementById("derivative");
+            derivativeElement.innerHTML = ''; // Clear previous content
+            katex.render('f\'(x) = ' + derivative, derivativeElement, {
                 throwOnError: false
             });
         }
@@ -74,6 +116,101 @@
     </script>
 
     <h1>지수</h1>
+    <p id="equation">Click the button to generate a exponential equation.</p>
+    <p id="answer"></p>
+    <button onclick="generateExponentialEquation()">Generate Equation</button>
+    <button onclick="showAnswer()">Show Answer</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/contrib/auto-render.min.js"></script>
+    <script>
+        let answer = '';
+
+        function generateExponentialEquation() {
+            // Define the possible degrees and coefficients
+            const degrees = [4, 3, 2, 1]; // Degrees of the polynomial
+            const maxCoefficient = 15; // Maximum absolute value for coefficients
+
+            // Define base
+            const bases = [2, 3, 5];
+
+            // Generate random coefficients for each degree
+            const coefficients = degrees.map(degree => Math.floor(Math.random() * maxCoefficient) - 6);
+            const constant = Math.floor(Math.random() * maxCoefficient) - 6;
+
+            // Construct the polynomial equation
+            let polynomial = '';
+            degrees.forEach((degree, index) => {
+                if (coefficients[index] !== 0) {
+                    let term = '';
+                    const coef = coefficients[index];
+                    if (coef === 1) {
+                        term += (degree > 1) ? 'x^' + degree : 'x';
+                    } else if (coef === -1) {
+                        term += (degree > 1) ? '-x^' + degree : '-x';
+                    } else {
+                        term += (degree > 1) ? coef + 'x^' + degree : coef + 'x';
+                    }
+                    if (index > 0) {
+                        polynomial += (coef > 0 ? ' + ' : ' ') + term;
+                    } else {
+                        polynomial += term;
+                    }
+                }
+            });
+            if (constant !== 0) {
+                polynomial += (constant > 0 ? ' + ' : ' ') + constant;
+            }
+
+            // Render the polynomial equation with KaTeX
+            const equationElement = document.getElementById("equation");
+            equationElement.innerHTML = ''; // Clear previous content
+            katex.render('f(x) = ' + polynomial, equationElement, {
+                throwOnError: false
+            });
+
+            // Compute the derivative
+            derivative = '';
+            degrees.forEach((degree, index) => {
+                if (coefficients[index] !== 0) {
+                    let term = '';
+                    const coef = coefficients[index] * degree;
+                    const newDegree = degree - 1;
+                    if (newDegree > 0) {
+                        if (coef === 1) {
+                            term += (newDegree > 1) ? 'x^' + newDegree : 'x';
+                        } else if (coef === -1) {
+                            term += (newDegree > 1) ? '-x^' + newDegree : '-x';
+                        } else {
+                            term += (newDegree > 1) ? coef + 'x^' + newDegree : coef + 'x';
+                        }
+                    } else {
+                        term += coef;
+                    }
+                    if (index > 0) {
+                        derivative += (coef > 0 ? ' + ' : ' ') + term;
+                    } else {
+                        derivative += term;
+                    }
+                }
+            });
+        }
+
+        // Function to display the derivative
+        function showDerivative() {
+            const derivativeElement = document.getElementById("derivative");
+            derivativeElement.innerHTML = ''; // Clear previous content
+            katex.render('f\'(x) = ' + derivative, derivativeElement, {
+                throwOnError: false
+            });
+        }
+
+        // Auto-render all elements with LaTeX expressions when the page loads
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
+    </script>
+
     <h1>그래프</h1>
 </body>
 </html>
