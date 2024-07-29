@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.css">
     <title>Ashley's HW Website</title>
     <style>
         body {
@@ -22,13 +23,54 @@
 <body>
     <h1>미적분</h1>
     <p id="q1"></p>
-    <button onclick="change()">Change Questions</button>
+    <button onclick="generatePolynomialEquation()">Generate Equation</button>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.0/contrib/auto-render.min.js"></script>
     <script>
-        function change() {
-            const generatedString = Math.floor(Math.random() * 100) + 1;
-            document.getElementById("q1").innerText = generatedString;
+        // Function to generate and render a polynomial equation using KaTeX
+        function generatePolynomialEquation() {
+            // Define the possible degrees and coefficients
+            const degrees = [1, 2, 3, 4]; // Degrees of the polynomial
+            const maxCoefficient = 8; // Maximum absolute value for coefficients
+
+            // Generate random coefficients for each degree
+            const coefficients = degrees.map(degree => Math.floor(Math.random() * maxCoefficient));
+            const constant = Math.floor(Math.random() * maxCoefficient);
+
+            // Construct the polynomial equation
+            let polynomial = '';
+            degrees.forEach((degree, index) => {
+                if (coefficients[index] !== 0) {
+                    let term = '';
+                    if (degree > 1) {
+                        term += coefficients[index] + 'x^' + degree;
+                    } else {
+                        term += coefficients[index] + 'x';
+                    }
+                    if (index > 0) {
+                        polynomial += ' + ' + term;
+                    } else {
+                        polynomial += term;
+                    }
+                }
+            });
+            if (constant !== 0) {
+                polynomial += ' + ' + constant;
+            }
+
+            // Render the polynomial equation with KaTeX
+            const equationElement = document.getElementById("equation");
+            equationElement.innerHTML = ''; // Clear previous content
+            katex.render('f(x) = ' + polynomial, equationElement, {
+                throwOnError: false
+            });
         }
+
+        // Auto-render all elements with LaTeX expressions when the page loads
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body);
+        });
     </script>
 
     <h1>지수</h1>
